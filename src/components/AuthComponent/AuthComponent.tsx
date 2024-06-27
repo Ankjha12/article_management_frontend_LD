@@ -14,6 +14,7 @@ import { useDispatch } from "react-redux";
 import { SignIn, SignUp } from "../../redux/action/authAction";
 import { Dispatch } from "redux";
 import { useNavigate } from "react-router-dom";
+import bcrypt from 'bcryptjs';
 const initialState = {
   firstName: "",
   lastName: "",
@@ -30,21 +31,27 @@ const Auth = ({isSignUp}: any) => {
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
   const [formData, setFromData] = React.useState(initialState);
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
 
     console.log("here is the form Data", formData);
 
     if (isSignUp) {
+      const hashedPassword = await bcrypt.hashSync(formData?.password, "$2a$10$0123456789012345678901")
+      const hashedconfirmPassword = await bcrypt.hashSync(formData?.confirmPassword, "$2a$10$0123456789012345678901")
+
+      const signupData = {...formData, password: hashedPassword, confirmPassword: hashedconfirmPassword}
       dispatch(
-        SignUp(formData, (success: boolean | any) => {
+        SignUp(signupData, (success: boolean | any) => {
           if (success) {
             navigate("/login");
           }
         })
       );
     }else {
-      dispatch(SignIn({email: formData?.email, password: formData?.password}, navigate))
+      const hashedPassword = await bcrypt.hashSync(formData?.password, "$2a$10$0123456789012345678901")
+      const loginData = {email: formData?.email, password: hashedPassword}
+      dispatch(SignIn(loginData, navigate))
     }
   };
 

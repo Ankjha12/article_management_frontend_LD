@@ -27,7 +27,8 @@ export const createArticle = (articleData: any) => async (dispatch: Dispatch<any
         console.log('Checking res of create post', res);
 
         if(res && res?.data && res?.data?.statusCode === 200) {
-            await dispatch({type: ACTION_TYPE.CREATE_ARTICLE, payload: articleData});
+            const updateArticleData = {...articleData, _id: res?.data?.data?.id, author: {_id: localStorage.getItem("profile_id")}}
+            await dispatch({type: ACTION_TYPE.CREATE_ARTICLE, payload: updateArticleData});
             dispatch(SETLOADING(false))
         }
     } catch (error) {

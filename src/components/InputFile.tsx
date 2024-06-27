@@ -21,6 +21,7 @@ const InputFile: React.FC<InputFileProps> = ({ setFieldValue, value }) => {
         const result = reader.result as string;
         setFieldValue('image', result);
       };
+      setError(null)
       reader.readAsDataURL(file);
     }
   };

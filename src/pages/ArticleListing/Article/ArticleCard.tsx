@@ -28,7 +28,7 @@ const Article = ({ article, setCurrentId }: any) => {
 
   useEffect(() => {
     setUserID(localStorage.getItem("profile_id"))
-  },[])
+  },[userID])
   return (
     <Card className={classes.card} raised elevation={6}>
         <CardMedia
